@@ -45,7 +45,7 @@
         background-color: #f0595f;
         border-color: #b0353a;
         color: #fff;
-        margin-left:115px;
+        margin-left:100px;
         width: 100px;
         height: 40px;  
     }
@@ -63,14 +63,12 @@
     .screen{
 
         background-color:rgb(171, 219, 231);
-        justify-content: center;
         color: black;
         font-size: medium;
-        width: 50%;
+        width: 100%;
         height: 30%;
         cursor: default;
         padding: 10px; 
-        padding-left: 88%;
         margin-left: 10px;
         margin-bottom: 10px;
     }
@@ -85,7 +83,7 @@
     <br>
     <table>
         <tr>
-            <td colspan="3"><input type='text' id='result' class ='screen' style="text-align: right;"></td>
+            <td colspan="3"><input type='text' id='result' readonly class ='screen'></td>
             <td>
                 <input type='button' value = 'C' onclick="clearScreen()" class="clear"/>
             </td>
@@ -106,7 +104,7 @@
         <input type="button" value="3" class="button" onClick="display('3')"></input>
         <input type="button" value="-" class="button" onClick="operator('-')"></input>
         <input type="button" value="0" class="button" onClick="display('0')"></input>
-        <input type="button" value="." class="button" onClick="display('.')"></input>
+        <input type="button" value="." class="button" onClick="dotValueCheck('.')"></input>
         <input type="button" value= "=" class="button equal-sign" onClick="solve()"></input>
         <input type="button" value="+" class="button" onClick="operator('+')"></input>
 
@@ -115,58 +113,77 @@
 <script>
             let user_value='';
             let element='';
+            let inputField= document.getElementById('result');
 
             function display(val){
-               document.getElementById('result').value += val;
+                inputField.value = inputField.value.toString() + val.toString();
+                // inputField.value += val; 
+
+                if(element !='')
+                {
+                    inputField.value=''; 
+                }
+            }
+            function dotValueCheck(dot)
+            {
+               // console.log((inputField.value ).includes(dot));
+
+                if((inputField.value ).includes(dot) == false)
+                {
+                    inputField.value = inputField.value.toString() + dot.toString();
+                }
             }
             function operator(operator)
             {
                 element=operator;
-                user_value= document.getElementById('result').value;
-                //console.log(user_value);
-                document.getElementById('result').value = '';
+                user_value = inputField.value;
 
+               // inputField.value = '';
             }
             function solve()
             {
-                // console.log(user_value);
-                // console.log(element);
-                let new_val=document.getElementById('result');
+                console.log(user_value);
+                console.log(element);
+                
+                let new_val=inputField;
                 let x=user_value;
                 let y=new_val.value;
 
                 switch(element){
                     case '+':
-                    result = parseInt(x)+parseInt(y);
+                    result = parseFloat(x)+parseFloat(y);
                     break;
 
                 }
                 switch(element){
                     case '-':
-                    result = parseInt(x)-parseInt(y);
+                    result = parseFloat(x)-parseFloat(y);
                     break;
 
                 }
                 switch(element){
                     case '*':
-                    result = parseInt(x)*parseInt(y);
+                    result = parseFloat(x)*parseFloat(y);
                     break;
 
                 }
                 switch(element){
                     case '/':
-                    result = parseInt(x)/parseInt(y);
+                    result = parseFloat(x)/parseFloat(y);
                     break;
 
                 }
 
-                document.getElementById("result").value=result;
-               
+                inputField.value=result;
             }
             function clearScreen(){
-                document.getElementById('result').value = '';
+                inputField.value = '';
+
             }
 </script>
 </body>
 </html>
+
+
+
 
