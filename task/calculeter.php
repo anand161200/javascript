@@ -11,7 +11,15 @@
         left: 50%;
         transform: translate(-50%, -50%);
         width: 450px;
-        height: 400px;
+        height: auto;
+    }
+    .reset {
+
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 10px;
+        padding: 10px;
+        margin:auto;
     }
     .keys {
 
@@ -21,13 +29,13 @@
         padding: 10px;
         margin:auto;
     }
-    .button {
+    .button {           
 
         height: 60px;
         padding: 5px;
-        background-color: #fff;
+        background-color:#bd4996;
         border-radius: 3px;
-        border: 1px solid #c4c4c4;
+        border: 1px solid #412c2c;
         background-color: transparent;
         font-size: 2rem;
         color: #333;
@@ -45,8 +53,9 @@
         background-color: #f0595f;
         border-color: #b0353a;
         color: #fff;
-        margin-left:100px;
-        width: 100px;
+        margin-left:50px;
+        margin-right:10px;
+        width: 50px;
         height: 40px;  
     }
     .clear:hover {
@@ -62,10 +71,11 @@
     }
     .screen{
 
-        background-color:rgb(171, 219, 231);
+        background-color:hwb(57deg 91% 0%);
         color: black;
         font-size: medium;
-        width: 100%;
+        margin-top: 20px;
+        width: 90%;
         height: 30%;
         cursor: default;
         padding: 10px; 
@@ -80,15 +90,12 @@
 
     <div class="container">
 
-    <br>
-    <table>
-        <tr>
-            <td colspan="3"><input type='text' id='result' readonly class ='screen'></td>
-            <td>
-                <input type='button' value = 'C' onclick="clearScreen()" class="clear"/>
-            </td>
-        </tr>
-    </table>
+    <input type='text' id='result'  class ='screen'>
+
+    <div class="reset">
+        <input type='button'  value = '❮' onclick="Back()" style="background-color:#70d4ff;" class="button"/>
+        <input type='button' value = 'C' onclick="clearScreen()" style="background-color:#ff9898;" class="button"/>
+    </div>
 
     <div class="keys">
         <input type="button" value="7" class="button" onClick="display('7')"></input>
@@ -111,17 +118,25 @@
     </div> 
 </div>
 <script>
-            let user_value='';
+            let first_value='';
             let element='';
+            let secound='';
             let inputField= document.getElementById('result');
 
             function display(val){
-                inputField.value = inputField.value.toString() + val.toString();
-                // inputField.value += val; 
 
+                // inputField.value += val; 
+                
                 if(element !='')
                 {
-                    inputField.value=''; 
+                    inputField.value='';
+                    secound +=val;
+                    inputField.value = inputField.value.toString() + secound.toString();
+                   
+                }
+                else
+                {
+                    inputField.value = inputField.value.toString() + val.toString();   
                 }
             }
             function dotValueCheck(dot)
@@ -131,24 +146,38 @@
                 if((inputField.value ).includes(dot) == false)
                 {
                     inputField.value = inputField.value.toString() + dot.toString();
+                    secound +=dot;
                 }
             }
             function operator(operator)
             {
                 element=operator;
-                user_value = inputField.value;
-
-               // inputField.value = '';
+                first_value = inputField.value;
+                secound='';
+            }
+            function Back()
+            {
+               inputField.value= inputField.value.slice(0, -1);
+               secound=secound.slice(0, -1);
+            
             }
             function solve()
             {
-                console.log(user_value);
-                console.log(element);
-                
-                let new_val=inputField;
-                let x=user_value;
-                let y=new_val.value;
+                // console.log(first_value);
+                // console.log(element);
+                // console.log(secound);
 
+                let x='';
+                let y=secound;
+
+                if(first_value !='')
+                {
+                    x=first_value;
+                }
+                else
+                {
+                    x='0';
+                }
                 switch(element){
                     case '+':
                     result = parseFloat(x)+parseFloat(y);
@@ -175,10 +204,13 @@
                 }
 
                 inputField.value=result;
+                // console.log(result);
             }
             function clearScreen(){
                 inputField.value = '';
-
+                first_value='';
+                secound='';
+                element='';
             }
 </script>
 </body>
