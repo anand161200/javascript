@@ -90,7 +90,7 @@
 
     <div class="container">
 
-    <input type='text' id='result'  class ='screen'>
+    <input type='text' id='result' class ='screen' autofocus>
 
     <div class="reset">
         <input type='button'  value = '❮' onclick="Back()" style="background-color:#70d4ff;" class="button"/>
@@ -120,23 +120,51 @@
 <script>
             let first_value='';
             let element='';
-            let secound='';
+            let second='';
             let inputField= document.getElementById('result');
+
+           
+            document.addEventListener('keyup', (event) => { 
+                if(event.key == "0") {display("0")} 
+                if(event.key == "1") {display("1")} 
+                if(event.key == "2") {display("2")} 
+                if(event.key == "3") {display("3")} 
+                if(event.key == "4") {display("4")} 
+                if(event.key == "5") {display("5")} 
+                if(event.key == "6") {display("6")} 
+                if(event.key == "7") {display("7")} 
+                if(event.key == "8") {display("8")} 
+                if(event.key == "9") {display("9")} 
+            });
+
+            document.addEventListener('keyup', (event)  => {
+              if(event.key == "+") {operator("+")}  
+              if(event.key == "-") {operator("-")}  
+              if(event.key == "*") {operator("*")}  
+              if(event.key == "/") {operator("/")}  
+            });
+
+            document.addEventListener('keyup', (event) => {
+                if(event.key == ".") {dotValueCheck(".")} 
+            });
+
+            document.addEventListener('keyup', (event) => {
+                if(event.key == "=") {solve("=")} 
+            });
 
             function display(val){
 
                 // inputField.value += val; 
-                
+  
                 if(element !='')
                 {
                     inputField.value='';
-                    secound +=val;
-                    inputField.value = inputField.value.toString() + secound.toString();
-                   
+                    second +=val;
+                    inputField.value = inputField.value.toString() + second.toString();  
                 }
                 else
-                {
-                    inputField.value = inputField.value.toString() + val.toString();   
+                {  
+                  inputField.value = inputField.value.toString() + val.toString();   
                 }
             }
             function dotValueCheck(dot)
@@ -146,29 +174,29 @@
                 if((inputField.value ).includes(dot) == false)
                 {
                     inputField.value = inputField.value.toString() + dot.toString();
-                    secound +=dot;
+                    second +=dot;
                 }
             }
             function operator(operator)
             {
                 element=operator;
                 first_value = inputField.value;
-                secound='';
+                second='';
             }
             function Back()
             {
                inputField.value= inputField.value.slice(0, -1);
-               secound=secound.slice(0, -1);
+               second=second.slice(0, -1);
             
             }
             function solve()
             {
                 // console.log(first_value);
                 // console.log(element);
-                // console.log(secound);
+                // console.log(second);
 
                 let x='';
-                let y=secound;
+                let y=second;
 
                 if(first_value !='')
                 {
