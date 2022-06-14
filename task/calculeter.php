@@ -90,7 +90,7 @@
 
     <div class="container">
 
-    <input type='text' id='result' class ='screen' autofocus>
+    <input type='text' id='result' class ='screen'  onkeypress="return isNumber(event)" autofocus>
 
     <div class="reset">
         <input type='button'  value = '❮' onclick="Back()" style="background-color:#70d4ff;" class="button"/>
@@ -98,7 +98,7 @@
     </div>
 
     <div class="keys">
-        <input type="button" value="7" class="button" onClick="display('7')"></input>
+        <button type="button" class="button" onClick="display('7')">7</button>
         <input type="button" value="8" class="button " onClick="display('8')"></input>
         <input type="button" value="9" class="button" onClick="display('9')"></input>
         <input type="button" value="/" class="button" onClick="operator('/')"></input>
@@ -114,7 +114,6 @@
         <input type="button" value="." class="button" onClick="dotValueCheck('.')"></input>
         <input type="button" value= "=" class="button equal-sign" onClick="solve()"></input>
         <input type="button" value="+" class="button" onClick="operator('+')"></input>
-
     </div> 
 </div>
 <script>
@@ -123,7 +122,6 @@
             let second='';
             let inputField= document.getElementById('result');
 
-           
             document.addEventListener('keyup', (event) => { 
                 if(event.key == "0") {display("0")} 
                 if(event.key == "1") {display("1")} 
@@ -149,63 +147,66 @@
             });
 
             document.addEventListener('keyup', (event) => {
-                if(event.key == "=") {solve("=")} 
+                if(event.keyCode == 08) {Back()} 
             });
 
-            function display(val){
+            document.addEventListener('keyup', (event) => {
+               
+                if(event.key == "=" || event.keyCode == 13) {solve()} 
+            });
 
-                // inputField.value += val; 
+            function isNumber(evt) {
+                evt = (evt) ? evt : window.event;
+                var charCode = (evt.which) ? evt.which : evt.keyCode;
+                if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                    return false;
+                }
+                return true;
+            }
+
+            function display(val) {
+                // inputField.value += val;
+              
+                inputField.value=''; 
   
-                if(element !='')
-                {
-                    inputField.value='';
+                if(element !='') {
                     second +=val;
                     inputField.value = inputField.value.toString() + second.toString();  
                 }
-                else
-                {  
-                  inputField.value = inputField.value.toString() + val.toString();   
+                else {  
+                    first_value +=val;
+                   inputField.value = inputField.value.toString() + first_value.toString();   
                 }
             }
-            function dotValueCheck(dot)
-            {
+
+            function dotValueCheck(dot) {
                // console.log((inputField.value ).includes(dot));
 
                 if((inputField.value ).includes(dot) == false)
                 {
                     inputField.value = inputField.value.toString() + dot.toString();
+                    first_value +=dot;
                     second +=dot;
                 }
             }
-            function operator(operator)
-            {
+
+            function operator(operator) {
                 element=operator;
                 first_value = inputField.value;
                 second='';
             }
-            function Back()
-            {
-               inputField.value= inputField.value.slice(0, -1);
+
+            function Back() { 
+              // inputField.value= inputField.value.slice(0, -1);
+               first_value=first_value.slice(0, -1);
                second=second.slice(0, -1);
-            
             }
+
             function solve()
             {
-                // console.log(first_value);
-                // console.log(element);
-                // console.log(second);
+                let x = first_value !='' ? first_value : 0;
+                let y = second !='' ? second : 0;
 
-                let x='';
-                let y=second;
-
-                if(first_value !='')
-                {
-                    x=first_value;
-                }
-                else
-                {
-                    x='0';
-                }
                 switch(element){
                     case '+':
                     result = parseFloat(x)+parseFloat(y);
@@ -231,7 +232,7 @@
 
                 }
 
-                inputField.value=result;
+                inputField.value=parseFloat(result);
                 // console.log(result);
             }
             function clearScreen(){
@@ -243,7 +244,3 @@
 </script>
 </body>
 </html>
-
-
-
-
