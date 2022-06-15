@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
     <div class="container">
@@ -25,44 +25,61 @@
 
         let user_data= [
             {
-                name :'Lucifer'
+                name :'Virat Kohli',
+                strike : false
             },
             {
-                name : 'Jack spparow' 
+                name :'Rohit Sarma',
+                strike : false
             }
         ];
 
         window.onload=function(){
-            relode();
+            reload();
         }
 
-        function relode() {
+        function reload() {
             user_list.innerHTML='';
 
             user_data.forEach(function(user_input, index){
                 user_list.innerHTML+= `<li class="list-group-item d-flex justify-content-between align-items-center">
-                 ${index+1}. ${user_input.name}
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="check_${index}" onclick="Strike(${index})"
+                         ${(user_input.strike == true) ? 'checked' : ''}>
+                        <span class="${(user_input.strike == true ) ? 'text-decoration-line-through' : ''}">
+                         ${user_input.name} </span>
+                    </label>
+                </div>
                 <button class="btn btn-danger" onclick="remove(${index})">x</button></li>`;   
             });
         }  
         
         function add() {
             user_data.push({
-                'name': user_name.value
+                name : user_name.value,
+                strike: false
             });
-                relode();
+            reload();
                 user_name.value='';
         }
 
         function remove(index) {
             //console.log(index);
             user_data.splice(index,1);
-            relode();
+            reload();
         }
 
-        function Strike(index)
-        {
-            //console.log(index);
+        function Strike(index) {
+            let checkBox=document.getElementById(`check_${index}`)
+
+            if (checkBox.checked == true){
+               user_data[index].strike=true;
+            } 
+            else{
+                user_data[index].strike=false;
+            }
+            reload();    
         }
 
     </script>  
