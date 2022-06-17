@@ -5,10 +5,33 @@
 </head>
 <body>
     <div class="container">
-        <div class="mt-5 text-center" >
+        <div class="mt-5 text-center text-danger" >
             <h2> My To Do List</h2>
         </div>
-        <div class="input-group mt-5">
+    <div class="row mt-3">
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-body bg-light text-black">
+                    <h5 class="card-title">Total : <span class="card-text" id="item_count"></span></h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-body  bg-light text-black">
+                    <h5 class="card-title">Complete : <span class="card-text" id="complete"></span></h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-body bg-light text-black">
+                    <h5 class="card-title">InComplete : <span class="card-text" id="incomplete"></span></h5>
+                </div>
+            </div>
+        </div>
+    </div>
+        <div class="input-group mt-3">
             <input type="text" id="user_name" class="form-control" >
             <div class="input-group-append">
                 <button class="btn btn-success" onclick="add()" type="button">+</button>
@@ -26,15 +49,21 @@
     
         let user_name = document.getElementById('user_name');
         let user_list = document.getElementById('user_list');
-
+        let count=0;
+        let total = document.getElementById('item_count');
+        let complete = document.getElementById('complete');
+        let incomplete = document.getElementById('incomplete');
+         
         let user_data= [
             {
+                id: 1,
                 name :'Virat Kohli',
-                strike : false
+                is_complate : false
             },
             {
+                id: 2,  
                 name :'Rohit Sarma',
-                strike : false
+                is_complate : false
             }
         ];
 
@@ -44,20 +73,28 @@
 
         function reload() {
             user_list.innerHTML='';
+            count=0;
 
-            user_data.forEach(function(user_input, index){
+            user_data.forEach(function(user){
                 user_list.innerHTML+= `<li class="list-group-item bg-light d-flex justify-content-between align-items-center">
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" id="check_${index}" onclick="Strike(${index})"
-                         ${(user_input.strike == true) ? 'checked' : ''}>
-                        <span class="${(user_input.strike == true ) ? 'text-decoration-line-through' : ''} ">
-                         ${user_input.name} </span>
+                        <input type="checkbox" id="check_${user.id}" data-objectid="${user.id}"
+                         onclick="updateStatus(this)"
+                         ${(user.is_complate == true) ? 'checked' : ''}>
+                        <span class="${(user.is_complate == true ) ? 'text-decoration-line-through' : ''} ">
+                         ${user.name} </span>
                     </label>
                 </div>
-                <button class="btn btn-danger btn-sm" onclick="remove(${index},'${user_input.name}')">x</button></li>`;   
+                <button class="btn btn-danger btn-sm" data-objectid="${user.id}" onclick="remove(this)">x</button></li>`;   
+
+                if(user.is_complate === true)
+                {
+                    count++;
+                }
             });
-        }  
+            calculation(); 
+        }
         
         function add() {
 
@@ -71,26 +108,24 @@
             }
             else{
                 user_data.push({
+                    id : Date.now(),
                     name : user_name.value,
                     strike: false
                 });
-                Swal.fire({
-                    position: 'top-end',
-                    icon: 'success',
-                    title: `${user_name.value} user added successfully`,
-                    showConfirmButton: false,
-                    timer: 1500
-                })
                 reload();
                 user_name.value='';
             }
         }
 
-        function remove(index,user_input) {
+        function remove(element) {
+            let objectId = user_data.findIndex(function(todo) {
+                return todo.id.toString() === element.dataset.objectid
+            });
+           let name= user_data[objectId].name
 
             Swal.fire({
                 title: 'Are you sure want to delete ?',
-                text: `${user_input}`,
+                text: name,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -99,11 +134,11 @@
                 }).then((result) => {
                 if (result.isConfirmed) {
 
-                    user_data.splice(index,1);
+                    user_data.splice(objectId,1);
                     Swal.fire({
                     position: 'top-end',
                     icon: 'success',
-                    title: `${user_input} delete successfully`,
+                    title: `${name} delete successfully`,
                     showConfirmButton: false,
                     timer: 1500
                 })
@@ -112,18 +147,30 @@
             })
         }
 
-        function Strike(index) {
-            let checkBox= document.getElementById(`check_${index}`)
+        function updateStatus(element) {
+
+            let objectId = user_data.findIndex(function(todo) {
+                return todo.id.toString() === element.dataset.objectid
+            });
+
+            let checkBox= document.getElementById(`check_${element.dataset.objectid}`)
 
             if (checkBox.checked == true){
-               user_data[index].strike=true;
+               user_data[objectId].is_complate=true;
             } 
             else{
-                user_data[index].strike=false;
+                user_data[objectId].is_complate=false;
             }
             reload();  
         }
 
+        function calculation()
+        {     
+            total.innerHTML=user_data.length;
+            complete.innerHTML=count;
+            incomplete.innerHTML=user_data.length-count;
+        }
+        
     </script>  
 </body>
 </html>
