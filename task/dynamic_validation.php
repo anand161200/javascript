@@ -20,16 +20,17 @@
         let filed2= document.getElementById("value2");
         let filed3= document.getElementById("value3");     
 
-        function validation()
+        function validation(element)
         {
-            if(element.value =="")
+         
+            if(element.value == "")
             {
-               
+                innerHTML = "please enter value"; 
             }
         }
         function submit() 
         {
-         
+          validation(filed1,filed2,filed3);
         }
     </script>
 </body>
