@@ -47,9 +47,11 @@
 
     <script>
     
+        
+        let total_complate=0;
+
         let user_name = document.getElementById('user_name');
         let user_list = document.getElementById('user_list');
-        let count=0;
         let total = document.getElementById('item_count');
         let complete = document.getElementById('complete');
         let incomplete = document.getElementById('incomplete');
@@ -67,16 +69,20 @@
             }
         ];
 
+        document.addEventListener('keyup', (event) => { 
+               if(event.keyCode == 13) {add()} 
+           });
+
         window.onload=function(){
             reload();
         }
 
         function reload() {
             user_list.innerHTML='';
-            count=0;
+            total_complate=0;
 
             user_data.forEach(function(user){
-                user_list.innerHTML+= `<li class="list-group-item bg-light d-flex justify-content-between align-items-center">
+                user_list.innerHTML+= `<li class="list-group-item d-flex justify-content-between align-items-center" style="background-color : ${(user.is_complate == true ) ? 'lightgrey' : 'white'}">
                 <div class="checkbox">
                     <label>
                         <input type="checkbox" id="check_${user.id}" data-objectid="${user.id}"
@@ -90,14 +96,18 @@
 
                 if(user.is_complate === true)
                 {
-                    count++;
+                    total_complate++;
                 }
             });
             calculation(); 
         }
         
         function add() {
+            
+           let index = user_data.findIndex((item) => item.name.toLowerCase() === user_name.value.toLowerCase());
 
+           if(index=== -1)
+           {
             if(user_name.value == "")
             {   
                 Swal.fire({
@@ -115,6 +125,15 @@
                 reload();
                 user_name.value='';
             }
+           }
+           else{
+            Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Alredy Exist this name.'
+                })
+           }
+
         }
 
         function remove(element) {
@@ -167,8 +186,8 @@
         function calculation()
         {     
             total.innerHTML=user_data.length;
-            complete.innerHTML=count;
-            incomplete.innerHTML=user_data.length-count;
+            complete.innerHTML=total_complate;
+            incomplete.innerHTML=user_data.length-total_complate;
         }
         
     </script>  
