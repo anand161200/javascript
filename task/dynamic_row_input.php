@@ -13,6 +13,7 @@
                     <th scope="col">Name</th>
                     <th scope="col">percentage</th>
                     <th scope="col">Roll-no</th>
+                    <th scope="col">action</th>
                 </tr>
             </thead>
             <tbody id="user_table">
@@ -21,6 +22,7 @@
         <button type="submit" class="btn btn-success" onclick="addRow()">ADD+</button>
         <button type="submit" class="btn btn-primary" onclick="submitData()">Submit</button>  
     </div>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
 
         let user_table=document.getElementById('user_table');
@@ -29,24 +31,48 @@
 
         function addRow()
         {
-            user_table.innerHTML += 
-            `<tr class="table_raw" data-rawindex="${counter}">
-                <td>#</td>
-                <td><input type="text" name="user_name_${counter}" class="form-control"></td>
-                <td><input type="text" name="percentage_${counter}" class="form-control"></td>
-                <td><input type="text" name="roll_no_${counter}" class="form-control"></td>
-            </tr>`
+            raw_count = document.querySelectorAll('tr').length
 
-            counter++;
+            if(raw_count > 5 ) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Sorry can not add more filed.'
+                })
+            }
+            else{
+             
+                user_table.innerHTML += 
+                `<tr class="table_raw" data-rawindex="${counter}">
+                    <td>${counter +1}</td>
+                    <td><input type="text" id="user_name[${counter}]" class="form-control"></td>
+                    <td><input type="text" id="percentage[${counter}]" class="form-control"></td>
+                    <td><input type="text" id="roll_no[${counter}]" class="form-control"></td>
+                    <td><button class="btn btn-danger btn-sm">x</button><td>
+                </tr>`
+                counter++;
+            }    
         }
 
         function submitData()
         {
             let table_raws= document.querySelectorAll('.table_raw');
-            
-                table_raws.forEach(function(raw){
-                  console.log( raw.dataset.rawindex) 
-                });
+
+            table_raws.forEach(function(raw){
+                
+                let user_name= document.getElementById(`user_name[${raw.dataset.rawindex}]`);
+                let percentage= document.getElementById(`percentage[${raw.dataset.rawindex}]`);
+                let roll_no= document.getElementById(`roll_no[${raw.dataset.rawindex}]`);
+
+                result.push({
+                   name: user_name.value,
+                   percentage: percentage.value,
+                   roll_no: roll_no.value
+
+                })
+            });
+
+            console.log(result);
         }
     </script>
 </body>
