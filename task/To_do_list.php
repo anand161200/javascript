@@ -120,7 +120,7 @@
                 user_data.push({
                     id : Date.now(),
                     name : user_name.value,
-                    strike: false
+                    is_complate: false
                 });
                 reload();
                 user_name.value='';
