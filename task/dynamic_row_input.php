@@ -58,6 +58,8 @@
 
         function submitData()
         {
+            result=[];
+
             let table_raws= document.querySelectorAll('.table_raw');
 
             table_raws.forEach(function(raw) {
@@ -73,12 +75,13 @@
                 })
 
                 let input_filed= document.querySelectorAll(".required");
+
                     input_filed.forEach(function(ele){
                         validation(ele);
                     }) 
             });
 
-            console.log(result);
+             console.log(result);
         }
 
         function removeRaw(btn) 
@@ -89,26 +92,24 @@
 
         function validation(element)
         {
+           
             error_msg = element.nextSibling;
+            if(error_msg != null)
+            {
+                error_msg.remove();  
+            }
 
             if(element.value == "")
             {
-                if(error_msg != null)
-                {
-                    error_msg.remove();  
-                }
                 
                 let error_message=element.dataset.error;
                 let error_ele= document.createElement("span");
                 error_ele.innerHTML = `Enter ${error_message}`;
-                error_ele.classList.add("text-danger"); 
+                error_ele.classList.add("text-danger");  
                     
                 element.insertAdjacentElement("afterend", error_ele); 
             }
-            else
-            {
-                 error_msg.remove();
-            }
+          
         }
 
     </script>
