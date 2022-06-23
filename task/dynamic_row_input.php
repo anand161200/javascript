@@ -41,14 +41,16 @@
                 })
             }
             else{
-             
                 user_table.innerHTML += 
-                `<tr class="table_raw" data-rawindex="${counter}">
+                `<tr id="raw" class="table_raw" data-rawindex="${counter}">
                     <td>${counter +1}</td>
-                    <td><input type="text" id="user_name[${counter}]" class="form-control"></td>
-                    <td><input type="text" id="percentage[${counter}]" class="form-control"></td>
-                    <td><input type="text" id="roll_no[${counter}]" class="form-control"></td>
-                    <td><button class="btn btn-danger btn-sm">x</button><td>
+                    <td><input type="text" id="user_name[${counter}]" class="form-control required"
+                    data-error="username"></td>
+                    <td><input type="text" id="percentage[${counter}]" class="form-control required"
+                    data-error="percentage"></td>
+                    <td><input type="text" id="roll_no[${counter}]" class="form-control required"
+                    data-error="Roll_no"></td>
+                    <td><button class="btn btn-danger btn-sm" onclick="removeRaw(this)">x</button><td>
                 </tr>`
                 counter++;
             }    
@@ -58,22 +60,57 @@
         {
             let table_raws= document.querySelectorAll('.table_raw');
 
-            table_raws.forEach(function(raw){
+            table_raws.forEach(function(raw) {
                 
                 let user_name= document.getElementById(`user_name[${raw.dataset.rawindex}]`);
                 let percentage= document.getElementById(`percentage[${raw.dataset.rawindex}]`);
                 let roll_no= document.getElementById(`roll_no[${raw.dataset.rawindex}]`);
-
-                result.push({
-                   name: user_name.value,
-                   percentage: percentage.value,
-                   roll_no: roll_no.value
-
+                
+                    result.push ({
+                    name: user_name.value,
+                    percentage: percentage.value,
+                    roll_no: roll_no.value
                 })
+
+                let input_filed= document.querySelectorAll(".required");
+                    input_filed.forEach(function(ele){
+                        validation(ele);
+                    }) 
             });
 
             console.log(result);
         }
+
+        function removeRaw(btn) 
+        {
+            let row = btn.parentNode.parentNode;
+                row.parentNode.removeChild(row);
+        }
+
+        function validation(element)
+        {
+            error_msg = element.nextSibling;
+
+            if(element.value == "")
+            {
+                if(error_msg != null)
+                {
+                    error_msg.remove();  
+                }
+                
+                let error_message=element.dataset.error;
+                let error_ele= document.createElement("span");
+                error_ele.innerHTML = `Enter ${error_message}`;
+                error_ele.classList.add("text-danger"); 
+                    
+                element.insertAdjacentElement("afterend", error_ele); 
+            }
+            else
+            {
+                 error_msg.remove();
+            }
+        }
+
     </script>
 </body>
 </html>
