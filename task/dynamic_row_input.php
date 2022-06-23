@@ -86,8 +86,28 @@
 
         function removeRaw(btn) 
         {
-            let row = btn.parentNode.parentNode;
-                row.parentNode.removeChild(row);
+            Swal.fire({
+                title: 'Are you sure want to delete ?',
+                text: name,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    let row = btn.parentNode.parentNode;
+                        row.parentNode.removeChild(row);
+                    Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: `${name} delete successfully`,
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                  
+                }
+            })
         }
 
         function validation(element)
