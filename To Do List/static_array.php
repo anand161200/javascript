@@ -29,9 +29,7 @@
 
           let node_element= document.getElementById('user_list');
 
-          employees.forEach(function(employee){
-
-            // console.log(employee);   
+          employees.forEach(function(employee){ 
 
             node_element.innerHTML +=`<li class="list-group-item bg-light d-flex justify-content-between       align-items-center">
              ${employee.name}  
