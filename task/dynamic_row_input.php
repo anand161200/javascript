@@ -4,33 +4,36 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
-    <div class="container bg-light mt-5" style="margin-top: 100px;">
+    <div class="container mt-5 p-2" style="margin-top: 100px;">
         <h4 class="text-center mt-3">Student Record</h4>
-        <table class="table">
+        <table class="table text-center table-bordered">
             <thead>
                 <tr>
+                    <th scope="col">Seat no</th>
                     <th scope="col">Name</th>
-                    <th scope="col">percentage</th>
-                    <th scope="col">Roll-no</th>
+                    <th scope="col">Subject 1</th>
+                    <th scope="col">Subject 2</th>
                     <th scope="col">action</th>
                 </tr>
             </thead>
             <tbody id="user_table">
             </tbody>
         </table>
-        <button type="submit" class="btn btn-success" onclick="addRow()">ADD+</button>
+        <button type="submit" class="btn btn-success" onclick="addRow()">Add Row</button>
         <button type="submit" class="btn btn-primary" onclick="submitData()">Submit</button>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">Name</th>
-                        <th scope="col">percentage</th>
-                        <th scope="col">Roll-no</th>
-                    </tr>
-                </thead>
-                <tbody id="user_list">
-                </tbody>
-            </table>  
+        <table class="table text-center table-bordered mt-3">
+            <thead>
+                <tr>
+                <th scope="col">Seat no</th>
+                <th scope="col">Name</th>
+                <th scope="col">Subject 1</th>
+                <th scope="col">Subject 2</th>
+                <th scope="col">Total</th>
+                </tr>
+            </thead>
+            <tbody id="user_list">
+            </tbody>
+        </table>  
     </div>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
@@ -53,13 +56,15 @@
             }
             else{
                 user_table.innerHTML += `<tr id="raw" class="table_raw" data-rawindex="${counter}">
-                    <td><input type="text" id="user_name[${counter}]" class="form-control required"
-                    data-error="username"></td>
-                    <td><input type="text" id="percentage[${counter}]" class="form-control required"
-                    data-error="percentage"></td>
-                    <td><input type="text" id="roll_no[${counter}]" class="form-control required"
-                    data-error="Roll_no"></td>
-                    <td><button class="btn btn-danger btn-sm" onclick="removeRaw(this)">x</button><td>
+                    <td><input type="number" id="seat_no[${counter}]" class="form-control required"
+                    data-error="seat no"></td>
+                    <td><input type="text" id="student_name[${counter}]" class="form-control required"
+                    data-error="name"></td>
+                    <td><input type="number" id="subjet_1[${counter}]" class="form-control required"
+                    data-error="subject 1"></td>
+                    <td><input type="number" id="subjet_2[${counter}]" class="form-control required"
+                    data-error="subject 2"></td>
+                    <td><button class="btn btn-danger btn-sm" onclick="removeRaw(this)">x</button></td>
                 </tr>`
                 counter++;
             }    
@@ -67,29 +72,42 @@
 
         function submitData()
         {
+            validation();
+
             result=[];
 
-            let table_raws= document.querySelectorAll('.table_raw');
+            user_list.innerHTML = '';
 
-            table_raws.forEach(function(raw) {
-                
-                let user_name= document.getElementById(`user_name[${raw.dataset.rawindex}]`);
-                let percentage= document.getElementById(`percentage[${raw.dataset.rawindex}]`);
-                let roll_no= document.getElementById(`roll_no[${raw.dataset.rawindex}]`);
-                
-                result.push ({
-                    name: user_name.value,
-                    percentage: percentage.value,
-                    roll_no: roll_no.value
-                })
+            if(document.querySelectorAll('.error-msg').length == 0)
+            {
+                let table_raws= document.querySelectorAll('.table_raw');
 
-                let input_filed= document.querySelectorAll(".required");
+                table_raws.forEach(function(raw) {
+                    
+                    let seat_no= document.getElementById(`seat_no[${raw.dataset.rawindex}]`);
+                    let student_name= document.getElementById(`student_name[${raw.dataset.rawindex}]`);
+                    let subjet_1= document.getElementById(`subjet_1[${raw.dataset.rawindex}]`);
+                    let subjet_2= document.getElementById(`subjet_2[${raw.dataset.rawindex}]`);
+                    
+                    result.push ({
+                        seat_no: seat_no.value,
+                        student_name: student_name.value,
+                        subjet_1: subjet_1.value,
+                        subjet_2: subjet_2.value
+                    })
+                });
 
-                input_filed.forEach(function(ele){
-                    validation(ele);
-                }) 
-            });
-    
+                result.forEach(function(row)
+                {
+                    user_list.innerHTML += `<tr>
+                        <td>${row.seat_no}</td>
+                        <td>${row.student_name}</td>
+                        <td>${row.subjet_1}</td>
+                        <td>${row.subjet_2}</td>
+                        <td> ${parseInt(row.subjet_1) + parseInt(row.subjet_2)}</td>
+                    </tr>`;
+                });
+            }
         }
 
         function removeRaw(btn) 
@@ -118,33 +136,29 @@
             })
         }
 
-        function validation(element)
+        function validation()
         {
-            error_msg = element.nextSibling;
-            user_list.innerHTML="";
+            let input_filed= document.querySelectorAll(".required");
 
-            if(error_msg != null)
-            {
-                error_msg.remove();  
-            }
-            else {
-                result.forEach(function(user) {
-                    user_list.innerHTML +=`<tr>
-                    <td>${user.name} </td>
-                    <td>${user.percentage} </td>
-                    <td>${user.roll_no} </td>
-                    </tr>`
-                });      
-            }
+            input_filed.forEach(function(ele){
 
-            if(element.value == "")
-            {
-                let error_message=element.dataset.error;
-                let error_ele= document.createElement("span");
-                error_ele.innerHTML = `Enter ${error_message}`;
-                error_ele.classList.add("text-danger");  
-                element.insertAdjacentElement("afterend", error_ele);   
-            }
+                error_msg = ele.nextSibling;
+
+                if(error_msg != null)
+                {
+                    error_msg.remove();  
+                }
+
+                if(ele.value == "")
+                {
+                    let error_message=ele.dataset.error;
+                    let error_ele= document.createElement("span");
+                    error_ele.innerHTML = `Enter ${error_message}`;
+                    error_ele.classList.add("text-danger");  
+                    error_ele.classList.add("error-msg");  
+                    ele.insertAdjacentElement("afterend", error_ele);   
+                }
+            })
         }    
     </script>
 </body>
