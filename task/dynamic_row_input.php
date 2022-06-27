@@ -55,7 +55,7 @@
                 })
             }
             else{
-                user_table.innerHTML += `<tr id="raw" class="table_raw" data-rawindex="${counter}">
+                user_table.innerHTML += `<tr class="table_raw" data-rawindex="${counter}">
                     <td><input type="number" id="seat_no[${counter}]" class="form-control required"
                     data-error="seat no"></td>
                     <td><input type="text" id="student_name[${counter}]" class="form-control required"
@@ -67,7 +67,7 @@
                     <td><button class="btn btn-danger btn-sm" onclick="removeRaw(this)">x</button></td>
                 </tr>`
                 counter++;
-            }    
+            }   
         }
 
         function submitData()
