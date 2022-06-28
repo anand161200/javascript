@@ -8,22 +8,50 @@
     <title>Fetch api</title>
 </head>
 <body>
-
     <div class="container">
         <div class="mt-5 text-center text-danger" >
             <h2> My To Do List</h2>
         </div>
+        <div class="row mt-3">
+            <div class="col-sm-4">
+                <div class="card">
+                    <div class="card-body bg-light text-black">
+                        <h5 class="card-title">Total : <span class="card-text" id="item_count">0</span></h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="card">
+                    <div class="card-body  bg-light text-black">
+                        <h5 class="card-title">Complete : <span class="card-text" id="complete">0</span></h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="card">
+                    <div class="card-body bg-light text-black">
+                        <h5 class="card-title">InComplete : <span class="card-text" id="incomplete">0</span></h5>
+                    </div>
+                </div>
+            </div>
+     </div>
         <select class="form-select mt-3" id="user_list" aria-label="Default select example">
-            
+        <option value="">Open this select menu</option> 
         </select>
         <div class="mt-3">
-            <ul class="list-group" id="user_data" >
+            <ul class="list-group" id="user_data">
             </ul>
         </div>
     </div>
     <script>
         let user_list=document.getElementById('user_list');
         let user_data=document.getElementById('user_data');
+        let total = document.getElementById('item_count');
+        let complete = document.getElementById('complete');
+        let incomplete = document.getElementById('incomplete');
+
+        let alldata= '';
+        let total_complate=0;
 
         fetch('https://jsonplaceholder.typicode.com/users')
         .then(response => response.json())
@@ -33,12 +61,21 @@
               </option>` 
         }))
 
-            document.getElementById("user_list").addEventListener('change', (event) => {
+        document.getElementById("user_list").addEventListener('change', (event) => {
               // console.log(event.target.value)
-                user_data.innerHTML="";
                 fetch(`https://jsonplaceholder.typicode.com/todos?userId=${event.target.value}`)
                 .then(response => response.json())
-                .then(data => data.forEach(function(user){
+                .then(data => {
+                    alldata = data;  // new variable define array store in variable
+                    reload();
+                }); 
+            });
+
+            function reload(){
+                user_data.innerHTML="";
+                total_complate=0;
+                
+                alldata.forEach(function(user){
                     user_data.innerHTML +=  
                     `<li class="list-group-item d-flex justify-content-between align-items-center"      style="background-color : ${(user.completed == true ) ? 'lightgrey' : 'white'}">
                         <div class="checkbox">
@@ -50,25 +87,50 @@
                                 ${user.title} </span>
                             </label>
                         </div>
-                    </li>`; 
-                }));
-                    
-            });
-    
-        function updateStatus(element , data) {
+                        <button class="btn btn-danger btn-sm" data-objectid="${user.id}" onclick="remove(this)">x
+                        </button>
+                    </li>`;
 
-            let objectId = data.findIndex(function(todo) {
+                    if(user.completed === true)
+                    {
+                        total_complate++;
+                    }
+                })
+                calculation();
+            }
+    
+        function updateStatus(element) {
+
+            let objectId = alldata.findIndex(function(todo) {
                 return todo.id.toString() === element.dataset.objectid
             });
 
             let checkBox= document.getElementById(`check_${element.dataset.objectid}`)
 
             if (checkBox.checked == true){
-                data[objectId].completed=true;
+                alldata[objectId].completed=true;
             } 
             else{
-                data[objectId].completed=false;
-            } 
+                alldata[objectId].completed=false;
+            }
+            reload();
+        }
+
+        function remove(element)
+        {
+            let objectId = alldata.findIndex(function(todo) {
+                return todo.id.toString() === element.dataset.objectid
+            });
+
+            alldata.splice(objectId,1);
+            reload();
+        }
+
+        function calculation()
+        {     
+            total.innerHTML=alldata.length;
+            complete.innerHTML=total_complate;
+            incomplete.innerHTML=alldata.length-total_complate;
         }
         
     </script>  
