@@ -17,13 +17,6 @@
             </div>
             <div>
                 <ul class="pagination mt-4" id="button">
-                    <!-- <li class="page-item active" aria-current="page">
-                    <button class="btn btn-primary text-white" onClick="runPaginate('1')">1</button>
-                    </li>
-                    <li class="page-item"><button class="btn btn-primary text-white" onClick="runPaginate('2')">2</button></li>
-                    <li class="page-item"><button class="btn btn-primary text-white" onClick="runPaginate('3')">3</button></li>
-                    <li class="page-item"><button class="btn btn-primary text-white" onClick="runPaginate('4')">4</button></li>
-                    <li class="page-item"><button class="btn btn-primary text-white" onClick="runPaginate('5')">5</button></li> -->
                 </ul>
             </div>
         </div>
@@ -31,29 +24,32 @@
     <script>
 
         let user_cart=document.getElementById("user_list");
+        let button= document.getElementById("button");
         let page_size = 2;
         let all_data='';
 
+
         fetch('https://jsonplaceholder.typicode.com/users')
         .then(response => response.json())
-        .then(data => data.forEach(function(user_data) {
-            user_cart.innerHTML += `<div class="col-sm-6">
-                <div class="card">
-                    <div class="card-body bg-light text-black">
-                        <h5 class="card-title">${user_data.name}</h5>
-                    </div>
-                </div>
-            </div>`
+        .then(data => {
             all_data=data;
-        }))
-        paginationButton();
+            paginate().forEach(function(user) {
+                user_cart.innerHTML += `<div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-body bg-light text-black">
+                            <h5 class="card-title">${user.name}</h5>
+                        </div>
+                    </div>
+                </div>`;
+             });
+            
+             paginationButton();
+        });
 
         function paginationButton() {
             
-           let button= document.getElementById("button")
-          // let page_count=Math.ceil(all_data.length / page_size);
-          page_count=5;
-            
+            let page_count=Math.ceil(all_data.length / page_size);
+
             for(let i=1; i<page_count +1 ; i++)
             {
               button.innerHTML +=`<li class="page-item"><button class="btn btn-primary text-white" 
@@ -74,7 +70,7 @@
             }); 
         }
         
-        function paginate(page_number)
+        function paginate(page_number=1)
         {
             return all_data.slice((page_number - 1) * page_size, page_number * page_size); 
         }
