@@ -29,15 +29,20 @@
                 </ul>
             </div>
         </div>
+        <div>
+             <span id="display_entry"> </span>
+        </div>
     </div>
     <script>
 
         let user_cart=document.getElementById("user_list");
         let button= document.getElementById("button");
         let data_select=document.getElementById('data_select');
+        let display_entry=document.getElementById('display_entry');
         let page_size=1;
         let all_data='';
         let page=1;
+        let start=1;
 
         fetch('https://jsonplaceholder.typicode.com/users')
         .then(response => response.json())
@@ -51,13 +56,14 @@
              user_cart.innerHTML="";
              page=1;
 
+
              reload();   
         });
 
         function reload(){
 
             data_select.value = page_size;
-            paginate().forEach(function(user) {
+            paginate().forEach(function(user ,index) {
                 user_cart.innerHTML += `<div class="col-sm-6">
                     <div class="card">
                         <div class="card-body bg-light text-black">
@@ -67,6 +73,7 @@
                 </div>`;
              });
              paginationButton(); 
+             displayEntry();
         }
 
         function paginationButton() {
@@ -81,6 +88,7 @@
 
         function runPaginate(page_number) {
             page=page_number;
+            start = page_number;
             user_cart.innerHTML="";
             reload(); 
         }
@@ -88,6 +96,12 @@
         function paginate()
         {
             return all_data.slice((page - 1) * page_size, page * page_size); 
+        }
+        function displayEntry(){
+            total_entry=all_data.length;
+            let end = 0;
+
+            display_entry.innerHTML=`Showing ${start} to  ${end} of ${total_entry}`    
         }
     </script>
 </body>
