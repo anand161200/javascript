@@ -12,6 +12,15 @@
         <div class="mt-5 text-center text-danger" >
             <h2> Pagination</h2>
         </div>
+        <div>
+            <select class="form-select-sm form-select-sm mt-3" id="data_select" aria-label=".form-select-sm example">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select> 
+        </div>
         <div class="row mt-5" >
             <div id="user_list" class="row">
             </div>
@@ -25,14 +34,29 @@
 
         let user_cart=document.getElementById("user_list");
         let button= document.getElementById("button");
-        let page_size = 2;
+        let data_select=document.getElementById('data_select');
+        let page_size=1;
         let all_data='';
-
+        let page=1;
 
         fetch('https://jsonplaceholder.typicode.com/users')
         .then(response => response.json())
-        .then(data => {
-            all_data=data;
+        .then(result => {
+            all_data=result;
+            reload(); 
+        });
+
+        document.getElementById("data_select").addEventListener('change', (event) => {
+             page_size = event.target.value;
+             user_cart.innerHTML="";
+             page=1;
+
+             reload();   
+        });
+
+        function reload(){
+
+            data_select.value = page_size;
             paginate().forEach(function(user) {
                 user_cart.innerHTML += `<div class="col-sm-6">
                     <div class="card">
@@ -42,39 +66,29 @@
                     </div>
                 </div>`;
              });
-            
-             paginationButton();
-        });
+             paginationButton(); 
+        }
 
         function paginationButton() {
-            
+            button.innerHTML="";
             let page_count=Math.ceil(all_data.length / page_size);
-
             for(let i=1; i<page_count +1 ; i++)
             {
-              button.innerHTML +=`<li class="page-item"><button class="btn btn-primary text-white" 
+              button.innerHTML +=`<li class="page-item ${(i == page)? 'active' : ''}"><button class="btn page-link" 
                 onClick="runPaginate(${i})">${i}</button></li>`
             }
         }
-    
+
         function runPaginate(page_number) {
+            page=page_number;
             user_cart.innerHTML="";
-            paginate(page_number).forEach(function(user){
-                user_cart.innerHTML += `<div class="col-sm-6">
-                    <div class="card">
-                        <div class="card-body bg-light text-black">
-                            <h5 class="card-title">${user.name}</h5>
-                        </div>
-                    </div>
-                </div>`;
-            }); 
+            reload(); 
         }
         
-        function paginate(page_number=1)
+        function paginate()
         {
-            return all_data.slice((page_number - 1) * page_size, page_number * page_size); 
+            return all_data.slice((page - 1) * page_size, page * page_size); 
         }
-
     </script>
 </body>
 </html>
