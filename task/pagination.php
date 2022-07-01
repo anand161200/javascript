@@ -59,7 +59,7 @@
         function reload(){
 
             data_select.value = page_size;
-            paginate().forEach(function(user ,index) {
+            paginate().forEach(function(user) {
                 user_cart.innerHTML += `<div class="col-sm-6">
                     <div class="card">
                         <div class="card-body bg-light text-black">
@@ -84,7 +84,6 @@
 
         function runPaginate(page_number) {
             page=page_number;
-            start_point=page_number;
             user_cart.innerHTML="";
             reload(); 
         }
@@ -95,13 +94,15 @@
         }
         function displayEntry() {
             total_entry=all_data.length;
-            start_point=page * page_size -page_size +1;
-            end_point=page * page_size;
 
-            if(total_entry )
+            start_point = page * page_size - page_size + 1;
+            end_point = page * page_size;
+            // console.log(paginate());
+
+            if (end_point > total_entry) 
             {
-                
-            } 
+                end_point = start_point + (paginate().length - 1)
+            }
             display_entry.innerHTML=`Showing ${start_point} to ${end_point} of ${total_entry}`    
         }                 
     </script>
