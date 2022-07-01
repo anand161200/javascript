@@ -24,13 +24,13 @@
         <div class="row mt-5" >
             <div id="user_list" class="row">
             </div>
-            <div>
-                <ul class="pagination mt-4" id="button">
+        </div>
+        <div class="d-flex bd-highlight mb-3 mt-3">
+            <div class="me-auto p-2 bd-highlight"><span id="display_entry"> </span></div>
+            <div class="p-2 bd-highlight">
+                <ul class="pagination" id="button">
                 </ul>
             </div>
-        </div>
-        <div>
-             <span id="display_entry"> </span>
         </div>
     </div>
     <script>
@@ -42,8 +42,6 @@
         let page_size=1;
         let all_data='';
         let page=1;
-        let start=1;
-
         fetch('https://jsonplaceholder.typicode.com/users')
         .then(response => response.json())
         .then(result => {
@@ -55,8 +53,6 @@
              page_size = event.target.value;
              user_cart.innerHTML="";
              page=1;
-
-
              reload();   
         });
 
@@ -88,7 +84,7 @@
 
         function runPaginate(page_number) {
             page=page_number;
-            start = page_number;
+            start_point=page_number;
             user_cart.innerHTML="";
             reload(); 
         }
@@ -97,12 +93,17 @@
         {
             return all_data.slice((page - 1) * page_size, page * page_size); 
         }
-        function displayEntry(){
+        function displayEntry() {
             total_entry=all_data.length;
-            let end = 0;
+            start_point=page * page_size -page_size +1;
+            end_point=page * page_size;
 
-            display_entry.innerHTML=`Showing ${start} to  ${end} of ${total_entry}`    
-        }
+            if(total_entry )
+            {
+                
+            } 
+            display_entry.innerHTML=`Showing ${start_point} to ${end_point} of ${total_entry}`    
+        }                 
     </script>
 </body>
 </html>
