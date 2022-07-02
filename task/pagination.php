@@ -28,7 +28,10 @@
         <div class="d-flex bd-highlight mb-3 mt-3">
             <div class="me-auto p-2 bd-highlight"><span id="display_entry"> </span></div>
             <div class="p-2 bd-highlight">
-                <ul class="pagination" id="button">
+                <ul class="pagination">
+                    <li class="page-item"><button class="btn page-link" id="Previous" onClick="previewPage('Previous')">Previous</button></li>
+                    <ul class="pagination" id="button"></ul>
+                    <li class="page-item"><button class="btn page-link" id="next" onClick="nextPage('next')">next</button></li>
                 </ul>
             </div>
         </div>
@@ -57,7 +60,6 @@
         });
 
         function reload(){
-
             data_select.value = page_size;
             paginate().forEach(function(user) {
                 user_cart.innerHTML += `<div class="col-sm-6">
@@ -75,10 +77,27 @@
         function paginationButton() {
             button.innerHTML="";
             let page_count=Math.ceil(all_data.length / page_size);
+
             for(let i=1; i<page_count +1 ; i++)
             {
               button.innerHTML +=`<li class="page-item ${(i == page)? 'active' : ''}"><button class="btn page-link" 
                 onClick="runPaginate(${i})">${i}</button></li>`
+            }
+
+            if(page == 1)
+            {
+               document.getElementById("Previous").disabled = true;
+            }
+            else{
+                document.getElementById("Previous").disabled = false;  
+            }
+
+            if(page >= page_count )
+            {
+               document.getElementById("next").disabled = true;
+            }
+            else{
+                document.getElementById("next").disabled = false;  
             }
         }
 
@@ -92,19 +111,33 @@
         {
             return all_data.slice((page - 1) * page_size, page * page_size); 
         }
+        
         function displayEntry() {
-            total_entry=all_data.length;
 
+            total_entry=all_data.length;
             start_point = page * page_size - page_size + 1;
             end_point = page * page_size;
-            // console.log(paginate());
 
             if (end_point > total_entry) 
             {
-                end_point = start_point + (paginate().length - 1)
+               end_point = start_point + (paginate().length - 1)
             }
-            display_entry.innerHTML=`Showing ${start_point} to ${end_point} of ${total_entry}`    
-        }                 
+            display_entry.innerHTML=`Showing ${start_point} to ${end_point} of ${total_entry}`
+        
+        }   
+        
+        function previewPage() {
+            user_cart.innerHTML="";
+            page--;
+            reload();      
+        }
+
+        function nextPage()
+        {
+            user_cart.innerHTML="";
+            page++;
+            reload();
+        } 
     </script>
 </body>
 </html>
