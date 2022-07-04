@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="mt-5 text-center text-danger" >
+        <div class="mt-5 text-center text-danger">
             <h2> Pagination</h2>
         </div>
         <div>
@@ -21,7 +21,7 @@
                 <option value="5">5</option>
             </select> 
         </div>
-        <div class="row mt-5" >
+        <div class="row mt-5">
             <div id="user_list" class="row">
             </div>
         </div>
@@ -31,7 +31,8 @@
                 <ul class="pagination">
                     <li class="page-item"><button class="btn page-link" id="Previous" onClick="previewPage('Previous')">Previous</button></li>
                     <ul class="pagination" id="button"></ul>
-                    <li class="page-item"><button class="btn page-link" id="next" onClick="nextPage('next')">next</button></li>
+                    <li class="page-item"><button class="btn page-link" id="next" onClick="nextPage('next')">next
+                    </button></li>
                 </ul>
             </div>
         </div>
@@ -60,7 +61,6 @@
         });
 
         function reload(){
-            data_select.value = page_size;
             paginate().forEach(function(user) {
                 user_cart.innerHTML += `<div class="col-sm-6">
                     <div class="card">
@@ -123,7 +123,6 @@
                end_point = start_point + (paginate().length - 1)
             }
             display_entry.innerHTML=`Showing ${start_point} to ${end_point} of ${total_entry}`
-        
         }   
         
         function previewPage() {
