@@ -101,17 +101,26 @@
         function cart(index) {
            // console.log(product[index])
            cart_table.innerHTML='';
-           cart_array.push(product[index]);
 
-           cart_array.forEach((element) => {
-                element.quantity = 1,
-                element.total =product[index].price
-                });
+           findvalue = cart_array.findIndex((item) => item.product_name === product[index].product_name); 
 
-            findvalue = cart_array.findIndex((item) => item.product_name === product[index].product_name); 
-            console.log(findvalue);
-            // cart_array[findvalue].quantity++;
-            reload();       
+           if(findvalue < 0)
+           {
+            cart_array.push({
+                product_name :product[index].product_name,
+                price :product[index].price,
+                quantity: 1,
+                total:product[index].price
+
+             })
+
+           }
+           else
+           {
+            cart_array[findvalue].quantity++; 
+           }  
+             reload();  
+                
         }
 
         function minusButton(index)
