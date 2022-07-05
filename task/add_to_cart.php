@@ -54,6 +54,8 @@
         product_list=document.getElementById("product_list");
         cart_table=document.getElementById("cart_table");
 
+        cart_array=[]
+
         window.onload=function(){
             product_item();
         }
@@ -74,42 +76,64 @@
                 </div>`
             })
         }
+        function reload(){ 
+            cart_table.innerHTML ='';
+
+            cart_array.forEach(function(item,index) {
+            cart_table.innerHTML += 
+                `<tr> 
+                    <td>${item.product_name}</td>
+                    <td>${item.price} </td>
+                    <td>
+                        <div class="input-group mb-3">
+                            <button class="btn btn-danger btn-sm" ${(item.quantity <= 1) ? 'disabled' : ''} onclick="minusButton(${index})">-</button>
+                            <input type="text" class="form-control"  id="input_filed_${index}" 
+                            min="1" max="10" value="${item.quantity}" style="width:2px;">
+                            <button class="btn btn-success btn-sm" ${(item.quantity >= item.stoke ) ? 'disabled' : ''} onclick="plusButton(${index})">+</button>
+                        </div>
+                    </td>
+                    <td> ${parseInt(item.quantity) * parseInt(item.price)}</td>
+                    <td><button class="btn btn-danger btn-sm" onclick="remove(${index})">x</button> </td>
+                </tr>`
+            });
+        }
 
         function cart(index) {
-          //  console.log(product[index])
-            cart_table.innerHTML += 
-            `<tr> 
-                <td>${product[index].product_name}</td>
-                <td>${product[index].price} </td>
-                <td>
-                    <div class="input-group mb-3">
-                        <button class="btn btn-danger btn-sm" id="minus" onclick="minusButton(${index})">-</button>
-                        <input type="number" class="form-control"  id="input_filed_${index}" 
-                          min="1" max="10" value="1"  style="width:2px;">
-                        <button class="btn btn-success btn-sm" id="plus" onclick="plusButton(${index})">+</button>
-                    </div>
-                </td>
-                <td></td>
-                <td><button class="btn btn-danger btn-sm" onclick="remove(this)">x</button> </td>
-            </tr>`
+           // console.log(product[index])
+           cart_table.innerHTML='';
+           cart_array.push(product[index]);
+
+           cart_array.forEach((element) => {
+                element.quantity = 1,
+                element.total =product[index].price
+                });
+
+            findvalue = cart_array.findIndex((item) => item.product_name === product[index].product_name); 
+            console.log(findvalue);
+            // cart_array[findvalue].quantity++;
+            reload();       
         }
 
         function minusButton(index)
         {
             let minus=document.getElementById(`input_filed_${index}`);
-            minus.value = parseInt(minus.value)- 1;
+                minus.value = parseInt(minus.value)- 1;  
+                minus=cart_array[index].quantity--;
+                reload();
         }
 
         function plusButton(index)
         {
             let plus=document.getElementById(`input_filed_${index}`)
-            plus.value = parseInt(plus.value) + 1;
+                plus.value = parseInt(plus.value) + 1;
+                plus=cart_array[index].quantity++;
+                reload();
         }
 
-        function remove(btn)
+        function remove(index)
         {
-            let row = btn.parentNode.parentNode;
-                row.parentNode.removeChild(row);  
+            cart_array.splice(index,1);
+            reload();          
         }
 
     </script>
