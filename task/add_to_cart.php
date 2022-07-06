@@ -30,31 +30,29 @@
             </div>
         </div>
     </div>
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
 
         let product =[
             {
                 product_name : "product 1",
                 price :100,
-                stock :5,
+                stoke :5,
             },
             {
                 product_name : "product 2",
                 price :120,
-                stock :6,
+                stoke :6,
             },
 
             {
                 product_name : "product 3",
                 price :140,
-                stock :7,
+                stoke :7,
             },
         ];
 
         product_list=document.getElementById("product_list");
         cart_table=document.getElementById("cart_table");
-        GrandTotal=0;
 
         cart_array=[]
 
@@ -71,17 +69,15 @@
                         <div class="card-body  text-black">
                             <h5 class="card-title">product:-${item.product_name}</h5>
                             <h5 class="card-title">Price:-${item.price}</h5>
-                            <h5 class="card-title">Stock:-${item.stock}</h5>
+                            <h5 class="card-title">Stoke:-${item.stoke}</h5>
                             <button class="btn btn-success btn-sm" onclick="cart(${index})">Add To Cart</button>
                         </div>
                     </div>
                 </div>`
             })
         }
-
         function reload(){ 
             cart_table.innerHTML ='';
-            GrandTotal=0;
 
             cart_array.forEach(function(item,index) {
             cart_table.innerHTML += 
@@ -93,21 +89,13 @@
                             <button class="btn btn-danger btn-sm" ${(item.quantity <= 1) ? 'disabled' : ''} onclick="minusButton(${index})">-</button>
                             <input type="text" class="form-control"  id="input_filed_${index}" 
                             min="1" max="10" value="${item.quantity}" style="width:2px;">
-                            <button class="btn btn-success btn-sm" ${(item.quantity >= item.stock ) ? 'disabled' : ''} onclick="plusButton(${index})">+</button>
+                            <button class="btn btn-success btn-sm" ${(item.quantity >= item.stoke ) ? 'disabled' : ''} onclick="plusButton(${index})">+</button>
                         </div>
                     </td>
-                    <td> ${item.total} </td>
+                    <td> ${parseInt(item.quantity) * parseInt(item.price)}</td>
                     <td><button class="btn btn-danger btn-sm" onclick="remove(${index})">x</button> </td>
                 </tr>`
-                
-                GrandTotal += parseInt(item.total) ;  
             });
-
-            cart_table.innerHTML +=
-             `<tr>
-                    <td colspan="3"></td>
-                    <td colspan="2">Grand total : ${GrandTotal}</td>
-              </tr> `  
         }
 
         function cart(index) {
@@ -121,26 +109,18 @@
             cart_array.push({
                 product_name :product[index].product_name,
                 price :product[index].price,
-                stock :product[index].stock,
                 quantity: 1,
-                total:product[index].price 
+                total:product[index].price
+
              })
+
            }
            else
            {
-              cart_array[findvalue].quantity++;   
-              cart_array[index].total =cart_array[index].price * cart_array[index].quantity;
-              
-              if (cart_array[index].quantity >= cart_array[index].stock)
-              {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'This product out of stock.'
-                   })
-              }
-           }
-            reload();    
+            cart_array[findvalue].quantity++; 
+           }  
+             reload();  
+                
         }
 
         function minusButton(index)
@@ -148,8 +128,6 @@
             let minus=document.getElementById(`input_filed_${index}`);
                 minus.value = parseInt(minus.value)- 1;  
                 minus=cart_array[index].quantity--;
-                minus=cart_array[index].total;
-                minus=cart_array[index].total =cart_array[index].total - cart_array[index].price;
                 reload();
         }
 
@@ -158,35 +136,13 @@
             let plus=document.getElementById(`input_filed_${index}`)
                 plus.value = parseInt(plus.value) + 1;
                 plus=cart_array[index].quantity++;
-                plus=cart_array[index].total =cart_array[index].price * cart_array[index].quantity;
-
-               reload();
+                reload();
         }
 
         function remove(index)
         {
-            Swal.fire({
-                title: 'Are you sure want to delete ?',
-                text: name,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                if (result.isConfirmed) {
-
-                    cart_array.splice(index,1);
-                    Swal.fire({
-                    position: 'top-end',
-                    icon: 'success',
-                    title: `${name} delete successfully`,
-                    showConfirmButton: false,
-                    timer: 1500
-                })
-                    reload();   
-               }
-            })
+            cart_array.splice(index,1);
+            reload();          
         }
 
     </script>
