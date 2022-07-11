@@ -90,11 +90,11 @@
                     <td>${item.price} </td>
                     <td>
                         <div class="input-group mb-3">
-                            <button class="btn btn-danger btn-sm" ${(item.quantity <= 1) ? 'disabled' : ''} onclick="minusButton(${index})">-</button>
-                            <input type="text" class="form-control"  id="input_filed_${index}" 
-                            min="1" max="10" value="${item.quantity}" style="width:2px;">
+                            <button class="btn btn-danger btn-sm " ${(item.quantity <= 1) ? 'disabled' : ''} onclick="minusButton(${index})">-</button>
+                            <h2><span class="label label-default" id="input_filed_${index}">${item.quantity}</span></h2>      
                             <button class="btn btn-success btn-sm" ${(item.quantity >= item.stock ) ? 'disabled' : ''} onclick="plusButton(${index})">+</button>
                         </div>
+                       
                     </td>
                     <td> ${item.total} </td>
                     <td><button class="btn btn-danger btn-sm" onclick="remove(${index})">x</button> </td>
@@ -108,7 +108,7 @@
                     <td colspan="3"></td>
                     <td colspan="2">Grand total : ${GrandTotal}</td>
               </tr> `  
-        }
+        }      
 
         function cart(index) {
            // console.log(product[index])
